@@ -12,4 +12,10 @@ public interface DoubleSolenoidIO {
   public default void updateInputs(DoubleSolenoidIOInputs inputs) {}
 
   public default void set(Value value) {}
+
+  public default void extendIntake() {}
+
+  public default void stopIntake() {}
+
+  public default void retractIntake() {}
 }

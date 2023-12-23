@@ -20,4 +20,16 @@ public class DoubleSolenoidIOPCM implements DoubleSolenoidIO {
   public void set(Value value) {
     dSolenoid.set(value);
   }
+  @Override
+  public void extendIntake() {
+    dSolenoid.set(Value.kForward);
+  }
+  @Override
+  public void retractIntake() {
+    dSolenoid.set(Value.kReverse);
+  }
+  @Override
+  public void stopIntake() {
+    dSolenoid.set(Value.kOff);
+  }
 }

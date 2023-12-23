@@ -4,13 +4,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.armmotor.JointedArm;
+import frc.robot.subsystems.armmotor.JointedArmMotorIO;
+import frc.robot.subsystems.pneumatics.CompressorIOPCM;
+import frc.robot.subsystems.pneumatics.DoubleSolenoidIOPCM;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,6 +25,7 @@ import frc.robot.subsystems.ExampleSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private static final JointedArm arm = new JointedArm(new CompressorIOPCM(0), new DoubleSolenoidIOPCM(0, 0, 0), new JointedArmMotorIO(0));
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -46,6 +52,13 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+        m_driverController.a().onTrue(new InstantCommand(() -> arm.setPosition(0), arm));
+        m_driverController.b().onTrue(new InstantCommand(() -> arm.setPosition(250), arm));
+        m_driverController.x().onTrue(new InstantCommand(() -> arm.setPosition(500), arm));
+        m_driverController.y().onTrue(new InstantCommand(() -> arm.setPosition(1000), arm));
+
+        m_driverController.leftBumper().onTrue(new InstantCommand(arm::activateBrake, arm));
+        m_driverController.rightBumper().onTrue(new InstantCommand(arm::deactivateBrake, arm));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());

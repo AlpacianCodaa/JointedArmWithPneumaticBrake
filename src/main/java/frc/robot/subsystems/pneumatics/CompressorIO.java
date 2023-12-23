@@ -13,7 +13,5 @@ public interface CompressorIO {
 
   public default void updateInputs(CompressorIOInputs inputs) {}
 
-  public default void enableCompressor() {}
-
-  public default void disableCompressor() {}
+  public default void toggleCompressor() {}
 }
